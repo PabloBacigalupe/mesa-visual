@@ -1,0 +1,72 @@
+MESA VISUAL — GENERACIÓN NUEVA POR PROMPT
+
+ABRIR EL DASHBOARD
+1. Instala Python 3.10 o posterior si aún no lo tienes.
+2. En esta carpeta, instala las dependencias: python3 -m pip install -r requirements.txt
+3. Ejecuta: python3 server.py
+4. Abre http://127.0.0.1:8765
+5. Pulsa «Conectar OpenAI» e introduce tu clave en el panel local.
+6. Escribe una noticia, elige estilo y formato y pulsa «Lanzar Prompt».
+
+La generación real requiere una clave de OpenAI con acceso a GPT Image 2 y saldo API.
+No está incluida en una suscripción a ChatGPT. Cada imagen consume saldo de la API.
+El panel valida la conexión antes de aceptarla. No crea imágenes al conectar.
+No compartas tu clave en chats ni la incluyas en el código.
+
+OPCIÓN STREAMLIT
+Ejecuta: streamlit run app.py --server.address 127.0.0.1
+La interfaz se integra en Streamlit y su servidor de imágenes arranca automáticamente.
+Es una aplicación local para el mismo ordenador; no está preparada para alojamiento público.
+
+QUÉ CAMBIA
+- Cada lanzamiento solicita una nueva generación, incluso con el mismo prompt.
+- Un titular o contexto nuevo actualiza el prompt automático al lanzar.
+- Si editaste el prompt manualmente y luego cambiaste el brief, se conserva tu texto y
+  se te pide pulsar «Generar Prompt» para evitar enviar una dirección antigua.
+- Los cuatro estilos utilizan las siete imágenes aportadas como referencias de lenguaje
+  visual. La instrucción pide una escena original para la noticia, sin copiar la referencia.
+- Las muestras del lienzo solo explican los estilos. Nunca se utilizan como resultados.
+- Versionar envía el resultado seleccionado con la intensidad elegida al generador.
+- Más opciones crea otras imágenes a partir del prompt de la propuesta seleccionada.
+- 1–10 imágenes por lanzamiento. Se genera una a una con progreso visible.
+- Un fallo conserva los resultados ya completados y muestra un aviso. No se reintentan
+  automáticamente las peticiones de pago ni se reemplazan resultados por ejemplos.
+- Una recarga recupera la galería y la generación en curso mientras viva el servidor.
+
+FORMATOS Y LÍMITES
+El generador recibe una resolución compatible con el modelo. Se ajusta la imagen al
+formato final exacto mediante remuestreo y, en Miniatura Link, un recorte mínimo centrado.
+La descarga es PNG. «Hacer Upscale» duplica las dimensiones por interpolación:
+no genera detalle adicional con IA.
+El contexto se puede escribir sin límite en la interfaz. El envío acepta hasta 31.000
+caracteres de prompt para reservar espacio a la instrucción de referencia; si se supera,
+se avisa y no se recorta ni se envía el texto. El usuario puede resumir el prompt editable.
+
+CLAVE Y DATOS
+La clave introducida se conserva solo en memoria del servidor. También se admite
+OPENAI_API_KEY como variable de entorno. No se guarda en HTML, archivos de resultados
+ni almacenamiento del navegador, y no se devuelve desde la API local.
+Al generar, el prompt y las referencias pertinentes se envían a https://api.openai.com/v1.
+«Desconectar» elimina la clave de la memoria de esta sesión. Al cerrar el servidor se pierde.
+Las imágenes se guardan en runtime/ con nombres únicos. Los metadatos de la galería
+son de sesión: al reiniciar el servidor, descarga o recupera los PNG de runtime/.
+La galería muestra las últimas 40 imágenes; las anteriores siguen en runtime/.
+Las ampliaciones por interpolación se conservan en la página hasta recargar; descárgalas.
+El servidor escucha solo en 127.0.0.1 y protege los cambios de sesión frente a otros sitios.
+
+ARCHIVOS
+server.py: servidor local y conexión real a la API de imágenes.
+app.py: entrada opcional de Streamlit.
+dist/: interfaz, referencias, ejemplos, estilos y lógica del dashboard.
+test_server.py: pruebas del servidor con respuestas simuladas, sin llamadas de pago.
+El HTML independiente sirve para consultar estilos y preparar prompts; para generar,
+abre la dirección local indicada y mantén el servidor en ejecución.
+
+VERIFICACIÓN
+Se han probado la renovación por lanzamiento, actualización de titulares, referencias,
+variaciones, errores sin muestras de sustitución, exportación de los cinco tamaños y
+validación de solicitudes. Estas pruebas usan un proveedor simulado. La generación
+con el servicio real queda pendiente de una clave aportada por el usuario.
+
+Documentación del proveedor:
+https://developers.openai.com/api/reference/resources/images/methods/edit

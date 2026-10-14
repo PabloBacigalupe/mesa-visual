@@ -1,0 +1,27 @@
+# Credenciales y configuración local
+.env
+.env.*
+*.pem
+*.key
+.streamlit/secrets.toml
+
+# Resultados y archivos de sesión
+runtime/
+*.log
+.DS_Store
+.openai/
+.codex/
+
+# Entornos y cachés
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+node_modules/
+
+# Empaquetados y notas locales
+*.zip
+work/
+outputs/
