@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Tu estudio de producción visual editorial. Convierte un brief en prompts, explora cuatro estilos y genera y descarga ilustraciones nuevas para cada noticia.">
+  <meta name="theme-color" content="#f5f5f1">
+  <title>Mesa Visual · Estudio editorial</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%231e231c'/%3E%3Cpath d='M8 29V11h5l7 10 7-10h5v18h-5V19l-7 9-7-9v10z' fill='%23d6ed79'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script src="assets.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="app-header">
+    <a href="#" class="brand" aria-label="Mesa Visual, inicio"><span class="brand-symbol">m<span>v</span></span><span>MESA<span class="brand-light">VISUAL</span></span></a>
+    <span class="header-divider"></span><span class="workspace">Estudio editorial</span>
+    <div class="header-right"><button class="demo-badge" id="connectionBtn"><i></i><span id="connectionLabel">Conectar OpenAI</span></button><button class="text-button" id="helpBtn"><span class="help-icon">?</span> Guía rápida</button></div>
+  </header>
+  <main>
+    <section class="intro"><div><p class="eyebrow">TU MESA DE PRODUCCIÓN</p><h1>Una noticia. Muchas miradas<span>.</span></h1><p class="intro-copy">Del contexto a la composición. Dale forma a tu próxima historia.</p></div><div class="intro-mark" aria-hidden="true"><span>✳</span><small>IDEA · EXPLORA · CREA</small></div></section>
+    <div class="studio-layout">
+      <div class="brief-column">
+        <section class="panel brief-panel" aria-labelledby="briefHeading">
+          <div class="section-head"><h2 id="briefHeading"><span class="step">01</span> La noticia</h2><button class="subtle-button" id="exampleBtn">Cargar ejemplo ↗</button></div>
+          <label for="headline">Titular <span class="required">*</span></label>
+          <textarea id="headline" rows="2" required placeholder="¿Qué historia vamos a contar?">La vivienda se aleja de los jóvenes</textarea>
+          <p class="error" id="headlineError" role="alert" hidden>Escribe un titular para continuar.</p>
+          <label for="description">Descripción / Información ampliada <span class="optional">Opcional</span></label>
+          <textarea id="description" rows="3" placeholder="Pega el texto de la noticia, los datos clave o el contexto editorial…">El aumento de los alquileres y la falta de oferta dificultan el acceso de los jóvenes a su primera vivienda.</textarea>
+          <p class="field-note">Todo el contexto que necesites. Sin límite de caracteres.</p>
+        </section>
+        <section class="panel" aria-labelledby="styleHeading">
+          <div class="section-head"><h2 id="styleHeading"><span class="step">02</span> Dirección de arte</h2><span class="small-label">TUS 4 ESTILOS</span></div>
+          <div class="style-grid" id="styles" role="group" aria-label="Estilos visuales"></div>
+          <div class="style-rule"><span class="rule-dot"></span><p id="styleDescription"></p></div>
+          <div class="reference-tools"><span id="referenceSummary">Basado en tu imagen 1</span><button id="referencesBtn" class="subtle-button">Ver referencias ↗</button></div>
+          <div class="style-tags" id="styleTags" aria-label="Claves del estilo"></div>
+          <div class="format-block"><label for="format">Formato de salida</label><div class="format-input"><span class="ratio-icon" id="ratioIcon" aria-hidden="true"></span><select id="format"><option value="1920x1080">1920x1080px (Web/Horizontal)</option><option value="1080x1080">1080x1080px (Cuadrado)</option><option value="1080x1920">1080x1920px (Story/Vertical)</option><option value="1200x630">1200x630px (Miniatura Link)</option><option value="800x600">800x600px (Prensa Tradicional)</option></select></div></div>
+        </section>
+        <section class="panel prompt-panel" aria-labelledby="promptHeading">
+          <div class="section-head"><h2 id="promptHeading"><span class="step">03</span> El prompt</h2><span class="small-label" id="promptState">POR CREAR</span></div>
+          <button id="generateBtn" class="button outline full"><span aria-hidden="true">✳</span> Generar Prompt</button>
+          <label class="sr-only" for="prompt">Prompt editable</label><textarea id="prompt" rows="7" placeholder="Tu dirección creativa aparecerá aquí. Genera el prompt y ajústalo con tus propias palabras antes de lanzarlo."></textarea>
+          <div class="prompt-meta"><span id="promptCount">0 caracteres</span><button class="subtle-button" id="copyBtn" disabled>Copiar</button></div>
+          <p class="error" id="promptError" role="alert" hidden>Genera o escribe un prompt antes de lanzarlo.</p>
+          <button id="launchBtn" class="button primary full">Lanzar Prompt <span aria-hidden="true">↗</span></button>
+          <p class="connection-status" id="connectionStatus" role="status">Comprobando conexión…</p><p class="error generation-error" id="generationError" role="alert" hidden></p><p class="action-note">Cada lanzamiento crea una imagen nueva y utiliza saldo de tu API.</p>
+        </section>
+      </div>
+      <div class="output-column">
+        <section class="panel preview-panel" aria-labelledby="previewHeading">
+          <div class="preview-header"><div class="preview-title"><span class="live-dot"></span><h2 id="previewHeading">Lienzo de trabajo</h2></div><span class="preview-mode" id="previewMode">EJEMPLO DE ESTILO</span></div>
+          <div class="canvas-stage" id="stage"><canvas id="previewCanvas" role="img" aria-label="Muestra de surrealismo pictórico"></canvas><div class="processing" id="processing" hidden><div class="spinner"></div><strong id="processingLabel">Generando una imagen nueva…</strong><span>La generación puede tardar unos minutos</span></div></div>
+          <div class="art-caption"><div><span class="art-name" id="artName">Acceso a la vivienda · Muestra de estilo</span><span class="art-subtitle" id="artSubtitle">Surrealismo pictórico</span></div><span class="dimension-tag" id="dimensions">1920 × 1080 px</span></div>
+          <div class="sample-explanation" id="sampleExplanation">Ejemplo de lenguaje visual. Al lanzar tu prompt, aquí aparecerá una imagen nueva creada para tu noticia.</div>
+          <div class="preview-actions"><p id="resultHint">Genera un prompt y lanza tu primera propuesta.</p><button id="downloadBtn" class="button primary" disabled><span aria-hidden="true">↓</span> Descargar Imagen</button></div>
+        </section>
+        <section class="panel iteration-panel" aria-labelledby="iterationHeading">
+          <div class="section-head"><h2 id="iterationHeading"><span class="step">04</span> Explora el resultado</h2><span class="small-label">AFINA TU DIRECCIÓN</span></div>
+          <div class="iteration-controls"><div class="version-count"><label for="versions">Número de versiones</label><select id="versions" aria-describedby="countNote"><option selected>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div><div class="variation-control"><label for="variation">Regular Variación <output id="variationValue" for="variation">35%</output></label><input id="variation" type="range" min="0" max="100" value="35"><div class="range-labels"><span>Suave / Sutil</span><span>Fuerte / Creativo</span></div></div></div>
+          <p class="field-note" id="countNote">La cantidad se aplica al lanzar, versionar y generar más opciones. Cada imagen consume saldo de la API.</p>
+          <div class="iteration-actions"><button id="upscaleBtn" class="button outline" disabled><span aria-hidden="true">⤢</span> Hacer Upscale <span class="button-chip">2×</span></button><button id="versionBtn" class="button outline" disabled><span aria-hidden="true">◈</span> Versionar</button><button id="moreBtn" class="button soft" disabled><span aria-hidden="true">⟳</span> Generar Más Opciones</button></div>
+          <p class="iteration-note" id="iterationNote">Selecciona una propuesta para crear variaciones o duplicar su resolución.</p>
+        </section>
+        <section class="panel gallery-panel" aria-labelledby="galleryHeading"><div class="section-head"><h2 id="galleryHeading">Tus propuestas <span class="counter" id="galleryCount">0</span></h2><span class="small-label" id="galleryLabel">TU EXPLORACIÓN, EN UN VISTAZO</span></div><div id="gallery" class="gallery"><div class="gallery-empty"><span aria-hidden="true">▧</span><p>Las buenas ideas empiezan con una prueba.</p><small>Tus versiones aparecerán aquí. Selecciona cualquiera para seguir explorando.</small></div></div></section>
+        <div class="editorial-note"><span aria-hidden="true">✳</span><p>Tus referencias. Tu dirección de arte.<br><span>Una nueva ilustración con cada lanzamiento · Referencias de estilo incorporadas</span></p></div>
+      </div>
+    </div>
+    <footer><span>MESA VISUAL <span class="footer-slash">/</span> ESTUDIO DE PRODUCCIÓN EDITORIAL</span><span>Diseñado para explorar.</span></footer>
+  </main>
+  <div id="toast" role="status" class="toast" hidden></div>
+  <dialog id="helpDialog"><div class="dialog-top"><span class="eyebrow">DE LA NOTICIA AL LIENZO</span><button id="closeHelpBtn" class="close-button" aria-label="Cerrar guía">×</button></div><h2>Tu flujo, en cuatro pasos.</h2><ol><li><strong>Cuenta la noticia.</strong> Escribe un titular y añade todo el contexto que necesites.</li><li><strong>Elige la mirada.</strong> Cada estilo incorpora sus reglas estéticas. Selecciona también el formato.</li><li><strong>Da la dirección.</strong> Genera el prompt, edítalo y lánzalo. Recibirás de 1 a 10 propuestas.</li><li><strong>Explora y descarga.</strong> Selecciona una propuesta, ajusta la variación, crea más opciones o aplica un upscale 2×.</li></ol><div class="help-note"><strong>Generación conectada a tu noticia</strong><p>Conecta tu clave de OpenAI en el botón de la cabecera. Cada lanzamiento envía el prompt y tus referencias de estilo para crear una imagen nueva, incluso si repites el mismo titular. La API consume saldo de tu cuenta, independiente de una suscripción a ChatGPT.</p><p>Al cambiar la noticia, el prompt automático se actualiza al lanzar. Si lo has editado a mano, se te avisará para que actualices la dirección antes de enviarla. El texto de contexto no se limita ni se recorta; el prompt que se envía a la API admite hasta 31.000 caracteres.</p><p>Versionar usa la imagen seleccionada y la intensidad de la barra. Más opciones vuelve a generar desde su prompt. Las descargas son PNG al tamaño elegido. El upscale 2× amplía por interpolación, sin generar detalle adicional con IA.</p><p>Puedes recargar y recuperar las imágenes mientras siga abierto el servidor. Descarga tus resultados antes de cerrar la sesión. La galería muestra las últimas 40 propuestas.</p></div><button id="startBtn" class="button primary full">A crear ↗</button></dialog>
+<dialog id="referencesDialog" aria-labelledby="referenceTitle"><div class="dialog-top"><span class="eyebrow">TUS REFERENCIAS DE DIRECCIÓN DE ARTE</span><button id="closeReferencesBtn" class="close-button" aria-label="Cerrar referencias">×</button></div><h2 id="referenceTitle"></h2><p id="referenceDescription"></p><div id="referenceImages" class="reference-images"></div><details class="reference-rules"><summary>Reglas que se incorporan al prompt</summary><p id="referenceRules"></p></details></dialog>
+<dialog id="connectionDialog" aria-labelledby="connectionTitle"><div class="dialog-top"><span class="eyebrow">ACTIVA TU ESTUDIO</span><button id="closeConnectionBtn" class="close-button" aria-label="Cerrar conexión">×</button></div><h2 id="connectionTitle">Imágenes nuevas para cada noticia.</h2><p class="connection-copy">Conecta OpenAI para crear ilustraciones con tus cuatro estilos de referencia. Modelo: GPT Image 2.</p><form id="connectionForm"><label for="apiKey">Tu clave API de OpenAI</label><input id="apiKey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-…" required><p class="field-note" id="connectionHelp"></p><div class="help-note"><strong>Generación con coste por uso</strong><p>Cada imagen utiliza saldo de tu cuenta API de OpenAI. La suscripción a ChatGPT no incluye este saldo. El prompt y las referencias se envían a OpenAI al generar.</p><a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">Crear o consultar mi clave ↗</a></div><p id="connectionError" class="error" role="alert" hidden></p><button id="connectBtn" class="button primary full" type="submit">Conectar</button><button id="disconnectBtn" class="button outline full" type="button" hidden>Desconectar y olvidar clave</button></form></dialog>
+</body>
+</html>
